@@ -2,7 +2,6 @@ import 'dart:math' as Math;
 import 'dart:ui';
 
 import 'package:flutter/painting.dart';
-import 'package:meta/meta.dart';
 import 'package:pigment/pigment.dart';
 
 import 'conversion.dart';
@@ -17,14 +16,11 @@ class TinyColor {
   Color? _color;
 
   TinyColor(Color color) {
-    this.originalColor =
-        Color.fromARGB(color.alpha, color.red, color.green, color.blue);
-    this._color =
-        Color.fromARGB(color.alpha, color.red, color.green, color.blue);
+    this.originalColor = Color.fromARGB(color.alpha, color.red, color.green, color.blue);
+    this._color = Color.fromARGB(color.alpha, color.red, color.green, color.blue);
   }
 
-  factory TinyColor.fromRGB(
-      {required int r, required int g, required int b, int a = 100}) {
+  factory TinyColor.fromRGB({required int r, required int g, required int b, int a = 100}) {
     return TinyColor(Color.fromARGB(a, r, g, b));
   }
 
@@ -76,8 +72,7 @@ class TinyColor {
       g: _color!.green.toDouble(),
       b: _color!.blue.toDouble(),
     );
-    return HslColor(
-        h: hsl.h! * 360, s: hsl.s, l: hsl.l, a: _color!.alpha.toDouble());
+    return HslColor(h: hsl.h! * 360, s: hsl.s, l: hsl.l, a: _color!.alpha.toDouble());
   }
 
   TinyColor clone() {
@@ -86,7 +81,7 @@ class TinyColor {
 
   TinyColor lighten([int amount = 10]) {
     final hsl = this.toHsl();
-    hsl.l += amount / 100;
+    hsl.l = (hsl.l ?? 0) + amount / 100;
     hsl.l = clamp01(hsl.l!);
     return TinyColor.fromHSL(hsl);
   }
@@ -95,8 +90,7 @@ class TinyColor {
     final color = Color.fromARGB(
       _color!.alpha,
       Math.max(0, Math.min(255, _color!.red - (255 * -(amount / 100)).round())),
-      Math.max(
-          0, Math.min(255, _color!.green - (255 * -(amount / 100)).round())),
+      Math.max(0, Math.min(255, _color!.green - (255 * -(amount / 100)).round())),
       Math.max(0, Math.min(255, _color!.blue - (255 * -(amount / 100)).round())),
     );
     return TinyColor(color);
@@ -104,7 +98,7 @@ class TinyColor {
 
   TinyColor darken([int amount = 10]) {
     final hsl = this.toHsl();
-    hsl.l -= amount / 100;
+    hsl.l = (hsl.l ?? 0) - amount / 100;
     hsl.l = clamp01(hsl.l!);
     return TinyColor.fromHSL(hsl);
   }
@@ -119,14 +113,14 @@ class TinyColor {
 
   TinyColor desaturate([int amount = 10]) {
     final hsl = this.toHsl();
-    hsl.s -= amount / 100;
+    hsl.s = (hsl.s ?? 0) - amount / 100;
     hsl.s = clamp01(hsl.s!);
     return TinyColor.fromHSL(hsl);
   }
 
   TinyColor saturate([int amount = 10]) {
     final hsl = this.toHsl();
-    hsl.s += amount / 100;
+    hsl.s = (hsl.s ?? 0) + amount / 100;
     hsl.s = clamp01(hsl.s!);
     return TinyColor.fromHSL(hsl);
   }
@@ -144,11 +138,8 @@ class TinyColor {
 
   TinyColor mix({required Color input, int amount = 50}) {
     final int p = (amount / 100).round();
-    final color = Color.fromARGB(
-        (input.alpha - _color!.alpha) * p + _color!.alpha,
-        (input.red - _color!.red) * p + _color!.red,
-        (input.green - _color!.green) * p + _color!.green,
-        (input.blue - _color!.blue) * p + _color!.blue);
+    final color = Color.fromARGB((input.alpha - _color!.alpha) * p + _color!.alpha, (input.red - _color!.red) * p + _color!.red,
+        (input.green - _color!.green) * p + _color!.green, (input.blue - _color!.blue) * p + _color!.blue);
     return TinyColor(color);
   }
 
